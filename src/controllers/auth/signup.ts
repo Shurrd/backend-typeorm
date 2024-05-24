@@ -38,7 +38,6 @@ export const signUp = async (
     userResponse.token = generateToken({
       id: userResponse.id,
     });
-    console.log(userResponse);
 
     res.status(200).json({
       message: 'success',

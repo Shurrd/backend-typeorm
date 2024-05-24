@@ -31,8 +31,8 @@ export class Transaction extends BaseEntity {
   @Column({ type: 'numeric' })
   transaction_amount: number;
 
-  @ManyToOne(() => User, (entity: User) => entity.id)
-  @JoinColumn({ name: 'user_id' })
+  @ManyToOne(() => User, (user: User) => user.id)
+  @JoinColumn({ name: 'created_by' })
   user: User;
 
   @CreateDateColumn()
