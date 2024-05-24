@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
 import { Transaction } from '../../entities/Transaction';
 import { AppDataSource } from '../../data-source';
+import { transactionRepo } from '../../utilities/repositories';
 
 // CREATE TRANSACTIONS
-export const transaction = async (req: Request, res: Response) => {
-  const transactionRepo = AppDataSource.getRepository(Transaction);
-
+export const createTransaction = async (req: Request, res: Response) => {
   const { transactionType, transactionAmount } = req.body;
 
   if (

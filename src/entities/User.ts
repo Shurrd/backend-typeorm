@@ -5,7 +5,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  BeforeInsert,
 } from 'typeorm';
 
 export enum UserType {

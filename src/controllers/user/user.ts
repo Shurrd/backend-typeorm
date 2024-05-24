@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
 import { User } from '../../entities/User';
 import { AppDataSource } from '../../data-source';
+import { userRepo } from '../../utilities/repositories';
 
 export const users = async (req: Request, res: Response) => {
-  const userRepo = AppDataSource.getRepository(User);
-
   const users = await userRepo.find();
 
   const response = users.map((item) => {

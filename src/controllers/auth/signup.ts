@@ -1,12 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
 import { User } from '../../entities/User';
-import { AppDataSource } from '../../data-source';
 
 import * as bcrypt from 'bcrypt';
 import { createUserSchema } from '../../utilities/validationSchema';
-import GlobalError from '../../utilities/globalErrorHandler';
+import { userRepo } from '../../utilities/repositories';
+import { generateToken } from '../../utilities/token';
 
 const SALT_ROUNDS = 10;
+
+interface UserResponse extends User {
+  token: string;
+}
 
 export const signUp = async (
   req: Request,
@@ -14,8 +18,6 @@ export const signUp = async (
   next: NextFunction
 ) => {
   try {
-    const userRepo = AppDataSource.getRepository(User);
-
     const { firstName, lastName, email, gender, userType, password } =
       await createUserSchema.validateAsync({ ...req.body });
 
@@ -29,9 +31,14 @@ export const signUp = async (
 
     await userRepo.save(newUser);
 
-    const userResponse: Partial<User> = { ...newUser };
+    const userResponse: Partial<UserResponse> = { ...newUser };
 
     delete userResponse.password;
+
+    userResponse.token = generateToken({
+      id: userResponse.id,
+    });
+    console.log(userResponse);
 
     res.status(200).json({
       message: 'success',
@@ -39,5 +46,10 @@ export const signUp = async (
     });
   } catch (error) {
     console.log(error);
+    next(
+      res.status(400).json({
+        message: error.message,
+      })
+    );
   }
 };
